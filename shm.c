@@ -138,19 +138,85 @@ static void shm_get(t_shm *x, t_symbol *s, int argc, t_atom *argv)
     if (type == 1)
     {
         data += sizeof(int)*index;
-        // SETFLOAT(&x->x_outv, *(float *)data);
         outlet_float(x->x_obj.ob_outlet, *(float *)data);
     }
     if (type == 2)
     {
         data += sizeof(float)*index;
-        // SETFLOAT(&x->x_outv, *(float *)data);
         outlet_float(x->x_obj.ob_outlet, *(float *)data);
     }
     if (type == 3)
     {
         data += sizeof(char)*index;
         outlet_symbol(x->x_obj.ob_outlet, *(char *)data);
+    }
+}
+
+static void shm_set(t_shm *x, t_symbol *s, int argc, t_atom *argv)
+{
+    if (argc == 0)
+    { 
+        logpost(x, 1, "[shm] err: empty argument");
+        return;
+    }
+    if (x->isReady == 0 || x->sharedData == NULL)
+    {
+        logpost(x, 1, "[shm] err: still not connected");
+        return;
+    }
+    
+    void* data = x->sharedData;
+    unsigned int type = 0;
+    unsigned int index = 0;
+    float got_float;
+    int i;
+
+    if (argv->a_type == A_SYMBOL)
+    {
+        char c = *(atom_getsymbol(argv)->s_name);
+        if (c == 'i') type = 1;
+        if (c == 'f') type = 2;
+        if (c == 's') type = 3;
+    }
+    else {
+        logpost(x, 1, "[shm] err: arg1 unknown type");
+        return;
+    }
+    argv++;
+
+    if (argv->a_type == A_FLOAT)
+    {
+        index = atom_getint(argv);
+    }
+    else {
+        logpost(x, 1, "[shm] err: arg1 unknown type");
+        return;
+    } 
+    argv++;
+
+    if (argv->a_type == A_FLOAT)
+    {
+        got_float = atom_getfloat(argv);
+    }
+
+    if (type == 0)
+    {
+        logpost(x, 1, "[shm] err: unknown type");
+        return;
+    }
+
+    if (type == 1)
+    {
+        data += sizeof(int)*index;
+    }
+    if (type == 2)
+    {
+        data += sizeof(float)*index;
+        *(float *)data = got_float;
+    }
+    if (type == 3)
+    {
+        data += sizeof(char)*index;
     }
 }
 
@@ -171,16 +237,6 @@ static void shm_connect(t_shm *x, t_symbol *s, int argc, t_atom *argv)
     // set key and size
     if (argc > 0)
     {
-        // while (argc--)
-        // {
-        //     switch (argv->a_type)
-        //     {
-        //         case A_FLOAT: shm_size(x, atom_getfloat(argv)); break;
-        //         case A_SYMBOL: shm_key(x, atom_getsymbol(argv)); break;
-        //         default: logpost(x, 1, "[shm] err: Unsupported atom type"); break;
-        //     }
-        //     argv++;
-        // }
         for (i = 0; i < argc; ++i)
         {
             if (i == 0)
@@ -276,6 +332,7 @@ void shm_setup(void)
 //    class_addmethod(shm_class, (t_method)shm_key, gensym("key"), A_DEFSYMBOL, 0);
 //    class_addmethod(shm_class, (t_method)shm_size, gensym("size"), A_FLOAT, 0);
     class_addmethod(shm_class, (t_method)shm_get, gensym("get"), A_GIMME, 0);
+    class_addmethod(shm_class, (t_method)shm_set, gensym("set"), A_GIMME, 0);
     class_addmethod(shm_class, (t_method)shm_print, gensym("print"), 0);
     class_addmethod(shm_class, (t_method)shm_connect, gensym("connect"), A_GIMME, 0);
     class_addmethod(shm_class, (t_method)shm_disconnect, gensym("disconnect"), 0);
