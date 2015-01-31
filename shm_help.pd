@@ -1,13 +1,30 @@
-#N canvas 417 264 450 300 10;
-#X msg 100 49 test;
-#X obj 72 50 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+#N canvas 698 259 450 300 10;
+#X obj 46 96 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
 -1;
-#X msg 143 49 li sst;
-#X msg 201 50 key test;
-#X msg 266 49 size 5000;
-#X obj 72 109 shm my_memory 1024;
-#X connect 0 0 5 0;
-#X connect 1 0 5 0;
-#X connect 2 0 5 0;
-#X connect 3 0 5 0;
-#X connect 4 0 5 0;
+#X msg 105 50 key test;
+#X msg 321 80 connect;
+#X msg 204 177 1 2 3;
+#X floatatom 255 175 5 0 0 0 - - -;
+#X msg 175 99 te 23 23;
+#X msg 317 113 disconnect;
+#X obj 72 208 shm;
+#X msg 243 48 key MyCustomData;
+#X msg 170 49 size 4;
+#X msg 29 130 type test te;
+#X floatatom 73 241 5 0 0 0 - - -;
+#X obj 17 65 metro 20;
+#X obj 17 38 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1 1
+;
+#X connect 0 0 7 0;
+#X connect 1 0 7 0;
+#X connect 2 0 7 0;
+#X connect 3 0 7 0;
+#X connect 4 0 7 0;
+#X connect 5 0 7 0;
+#X connect 6 0 7 0;
+#X connect 7 0 11 0;
+#X connect 8 0 7 0;
+#X connect 9 0 7 0;
+#X connect 10 0 7 0;
+#X connect 12 0 7 0;
+#X connect 13 0 12 0;
