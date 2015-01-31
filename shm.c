@@ -14,15 +14,15 @@ static t_class * shm_class;
 
 typedef struct _shm
 {
-    t_object x_obj;
-    t_outlet *x_outlet; ///< dump shared data
-    
+    t_object        x_obj;
+    t_outlet*       x_outlet;
+    t_atom          x_outv;
+
     int             isReady;
     int             isServer;
     unsigned int    memorySize;
     char            memoryKey[MAXPDSTRING];
-    char            dataType[MAXPDSTRING];
-    void            *sharedData;
+    void*           sharedData;
     
 } t_shm;
 
@@ -30,7 +30,8 @@ static char *shm_version = "$vertion: 0.0.1 $";
 
 static void shm_key(t_shm *x, t_symbol *s);     /// set memory key
 static void shm_size(t_shm *x, t_float f);      /// set memory size
-static void shm_get(t_shm *x, t_symbol *s, int argc, t_atom *argv);    /// get share data as type
+static void shm_get(t_shm *x, t_symbol *s, int argc, t_atom *argv); /// get memory mapped file
+static void shm_set(t_shm *x, t_symbol *s, int argc, t_atom *argv); /// set memory mapped file
 static void shm_connect(t_shm *x, t_symbol *s, int argc, t_atom *argv); /// try connect to shared memory
 static void shm_disconnect(t_shm *x);           /// disconnect
 static void shm_print(t_shm *x);                /// dump infomation
@@ -91,61 +92,66 @@ static void shm_size(t_shm *x, t_float f)
 
 static void shm_get(t_shm *x, t_symbol *s, int argc, t_atom *argv)
 {
-    if (x->isReady != 0 && x->sharedData != NULL)
+    if (argc == 0)
+    { 
+        logpost(x, 1, "[shm] err: empty argument");
+        return;
+    }
+    if (x->isReady == 0 || x->sharedData == NULL)
     {
         logpost(x, 1, "[shm] err: still not connected");
         return;
     }
-    if (argc % 2 != 0)
+    
+    void* data = x->sharedData;
+    unsigned int type = 0;
+    unsigned int index = 0;
+    int i;
+    
+    for (i = 0; i < argc; ++i)
     {
-        logpost(x, 1, "[shm] err: [type] [num] ...");
+        if (argv->a_type == A_FLOAT)
+        {
+            index = atom_getint(argv);
+            if (index >= x->memorySize)
+            {
+                logpost(x, 1, "[shm] err: ");
+                index = 0;
+            }
+        }
+        if (argv->a_type == A_SYMBOL)
+        {
+            char c = *(atom_getsymbol(argv)->s_name);
+            if (c == 'i') type = 1;
+            if (c == 'f') type = 2;
+            if (c == 's') type = 3;
+        }
+        argv++;
+    }
+
+    if (type == 0)
+    {
+        logpost(x, 1, "[shm] err: unknown type");
         return;
     }
-    
-    void * data = x->sharedData;
-    t_atom *outv = (t_atom *)malloc(sizeof(t_atom) * 64);
-    int *type = (int *)malloc(sizeof(int) * 64);
-    int num = 0;
-    
-    if (argc > 0)
+
+    if (type == 1)
     {
-        while (argc--)
-        {
-            if (argc % 2 == 0)
-            {
-                char c = *(atom_getsymbol(argv)->s_name);
-                switch (c)
-                {
-                    case 'f': *type = 0; break;
-                    case 's': *type = 1; break;
-                    default: logpost(x, 1, "[shm] err: unknown type"); break;
-                }
-                ++type;
-                ++num;
-            }
-            else if (argc % 2 == 1)
-            {
-                switch (*type)
-                {
-                    case 0:
-                        
-                        break;
-                }
-            }
-//            switch (argv->a_type)
-//            {
-//                case A_FLOAT: post("check %f", atom_getfloat(argv)); break;
-//                case A_SYMBOL: post("check %s", atom_getsymbol(argv)->s_name); break;
-//            }
-            argv++;
-            
-        }
+        data += sizeof(int)*index;
+        // SETFLOAT(&x->x_outv, *(float *)data);
+        outlet_float(x->x_obj.ob_outlet, *(float *)data);
     }
-        
-    outlet_list(x->x_obj.ob_outlet, s, num, outv);
-    
-    free(outv);
-    free(type);
+    if (type == 2)
+    {
+        data += sizeof(float)*index;
+        // SETFLOAT(&x->x_outv, *(float *)data);
+        outlet_float(x->x_obj.ob_outlet, *(float *)data);
+    }
+    if (type == 3)
+    {
+        data += sizeof(char)*index;
+        outlet_symbol(x->x_obj.ob_outlet, *(char *)data);
+    }
 }
 
 static void shm_print(t_shm *x)
@@ -201,6 +207,7 @@ static void shm_connect(t_shm *x, t_symbol *s, int argc, t_atom *argv)
                 }
                 else logpost(x, 1, "[shm] err: arg 3 unsupported atom type");
             }
+            argv++;
         }
     }
     else {
