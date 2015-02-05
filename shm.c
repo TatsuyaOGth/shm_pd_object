@@ -16,7 +16,6 @@ typedef struct _shm
 {
     t_object        x_obj;
     t_outlet*       x_outlet;
-    t_atom          x_outv;
 
     int             isReady;
     int             isServer;
