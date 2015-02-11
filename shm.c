@@ -35,8 +35,8 @@ static void shm_connect(t_shm *x, t_symbol *s, int argc, t_atom *argv); /// try 
 static void shm_disconnect(t_shm *x);           /// disconnect
 static void shm_print(t_shm *x);                /// dump infomation
 
-//---------------------------------------------------------- new
 
+//============================================================================
 static void *shm_new(t_symbol *s, int argc, t_atom *argv)
 {
     int i;
@@ -59,14 +59,11 @@ static void *shm_new(t_symbol *s, int argc, t_atom *argv)
     return (x);
 }
 
-//---------------------------------------------------------- delete
-
 static void shm_free(t_shm *x)
 {
     if (x->isReady != 0) shm_disconnect(x);
 }
 
-//---------------------------------------------------------- inlet action
 static void shm_bang(t_shm *x)
 {
     if (x->isReady != 0 && x->sharedData != NULL)
@@ -79,13 +76,11 @@ static void shm_bang(t_shm *x)
 static void shm_key(t_shm *x, t_symbol *s)
 {
     strcpy(x->memoryKey, s->s_name);
-//    logpost(x, 2, "[shm] notice: set new memory key = %s", x->memoryKey);
 }
 
 static void shm_size(t_shm *x, t_float f)
 {
     x->memorySize = floor(f);
-//    logpost(x, 2, "[shm] notice: set new memory size = %d", x->memorySize);
 }
 
 
@@ -316,9 +311,6 @@ static void shm_disconnect(t_shm *x)
     }
 }
 
-
-//---------------------------------------------------------- setup
-
 void shm_setup(void)
 {
     shm_class = class_new(gensym("shm"),
@@ -328,8 +320,6 @@ void shm_setup(void)
                                CLASS_DEFAULT, A_GIMME, 0);
     
     class_addbang(shm_class, shm_bang);
-//    class_addmethod(shm_class, (t_method)shm_key, gensym("key"), A_DEFSYMBOL, 0);
-//    class_addmethod(shm_class, (t_method)shm_size, gensym("size"), A_FLOAT, 0);
     class_addmethod(shm_class, (t_method)shm_get, gensym("get"), A_GIMME, 0);
     class_addmethod(shm_class, (t_method)shm_set, gensym("set"), A_GIMME, 0);
     class_addmethod(shm_class, (t_method)shm_print, gensym("print"), 0);

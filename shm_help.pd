@@ -1,7 +1,7 @@
-#N canvas 342 141 680 570 10;
+#N canvas 56 144 680 570 10;
 #X msg 70 67 disconnect;
 #X obj 204 112 metro 20;
-#X obj 204 87 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+#X obj 204 87 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
 #X msg 80 107 get f 2;
 #N canvas 0 22 450 278 (subpatch) 0;
@@ -28,7 +28,7 @@
 #X obj 323 162 + 1;
 #X obj 293 84 t b b;
 #X msg 331 114 0;
-#X obj 293 32 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+#X obj 293 32 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
 #X obj 293 384 tabread array2;
 #X obj 293 415 pack f f;
