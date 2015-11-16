@@ -1,0 +1,27 @@
+#N canvas 408 306 450 300 10;
+#X obj 75 107 send my_value;
+#X obj 75 182 receive my_value;
+#X floatatom 75 57 5 0 0 0 - - -;
+#X obj 132 56 pack f f;
+#X floatatom 130 25 5 0 0 0 - - -;
+#X floatatom 178 23 5 0 0 0 - - -;
+#X obj 77 217 print;
+#X floatatom 244 146 5 0 0 0 - - -;
+#X msg 244 83 get f 0;
+#X obj 241 50 metro 10;
+#X obj 236 28 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+1;
+#X floatatom 312 48 5 0 0 0 - - -;
+#X msg 309 81 set f 0 \$1;
+#X obj 244 111 shm shm_float 4;
+#X connect 1 0 6 0;
+#X connect 2 0 0 0;
+#X connect 3 0 0 0;
+#X connect 4 0 3 0;
+#X connect 5 0 3 1;
+#X connect 8 0 13 0;
+#X connect 9 0 8 0;
+#X connect 10 0 9 0;
+#X connect 11 0 12 0;
+#X connect 12 0 13 0;
+#X connect 13 0 7 0;

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>89ED826A-409B-4E5A-9E5F-2D65C3BCE661</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>0672D5E3B882F3A545C7B78E5FCF7020562DF78F</key>
+		<string>https://github.com/trentbrooks/ofxSharedMemory.git</string>
+	</dict>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>0672D5E3B882F3A545C7B78E5FCF7020562DF78F</key>
+		<string>ofxSharedMemory/</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/trentbrooks/ofxSharedMemory.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>0672D5E3B882F3A545C7B78E5FCF7020562DF78F</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>0672D5E3B882F3A545C7B78E5FCF7020562DF78F</string>
+			<key>IDESourceControlWCCName</key>
+			<string>ofxSharedMemory</string>
+		</dict>
+	</array>
+</dict>
+</plist>
